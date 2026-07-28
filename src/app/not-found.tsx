@@ -1,0 +1,1 @@
+import Link from "next/link";export default function NotFound(){return <main className="error-page"><h1>Dokumen tidak ditemukan</h1><p>Slug dokumen tidak tersedia dalam research library.</p><Link href="/documents/product-discovery">Buka Product Discovery</Link></main>}

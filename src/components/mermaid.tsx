@@ -1,0 +1,3 @@
+"use client";
+import { useEffect,useId,useState } from "react";
+export function Mermaid({chart}:{chart:string}){const id=useId().replace(/:/g,"");const [svg,setSvg]=useState("");useEffect(()=>{let live=true;import("mermaid").then(async({default:m})=>{m.initialize({startOnLoad:false,theme:document.documentElement.classList.contains("dark")?"dark":"neutral",securityLevel:"strict"});const out=await m.render(`mermaid-${id}`,chart);if(live)setSvg(out.svg)}).catch(()=>setSvg("<p>Diagram gagal dirender.</p>"));return()=>{live=false}},[chart,id]);return <div className="mermaid" dangerouslySetInnerHTML={{__html:svg}}/>}
