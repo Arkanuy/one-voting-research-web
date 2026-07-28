@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
+  basePath: "/one-voting-research-web",
+  trailingSlash: true,
 };
 
 export default nextConfig;
