@@ -15,6 +15,5 @@ export function getDocumentMeta(slug: DocumentSlug) { return documents.find(d =>
 export function getMarkdown(slug: DocumentSlug) { return fs.readFileSync(path.join(root, `${slug}.md`), "utf8"); }
 export function slugify(value: string) { return value.toLowerCase().trim().replace(/[`*_~[\]()]/g, "").replace(/[^\p{L}\p{N}\s-]/gu, "").replace(/\s+/g, "-").replace(/-+/g, "-"); }
 export function extractHeadings(markdown: string): Heading[] { return markdown.split("\n").flatMap(line => { const m = /^(#{2,3})\s+(.+)$/.exec(line); return m ? [{ level: m[1].length, text: m[2].replace(/[*_`]/g, ""), id: slugify(m[2]) }] : []; }); }
-const researchLabels = /\[(FAKTA|INSIGHT|ASUMSI|REKOMENDASI|PERLU VALIDASI)\]/g;
-export function decorateResearchLabels(markdown: string) { return markdown.replace(researchLabels, "`[$1]`"); }
+export {decorateResearchLabels} from "./markdown-labels";
 export function getSearchIndex() { return documents.map(d => ({ ...d, content: getMarkdown(d.slug).replace(/[#*`|>\[\]]/g, " ").replace(/\s+/g, " ") })); }

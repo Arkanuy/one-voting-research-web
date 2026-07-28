@@ -1,0 +1,1 @@
+import{AdminEditor}from'@/components/admin-editor';import{documents}from'@/lib/documents';export default function Admin(){return <AdminEditor documents={documents.map(({slug,title})=>({slug,title}))}/>;}

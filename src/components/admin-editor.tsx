@@ -1,0 +1,16 @@
+"use client";
+import { useEffect, useState } from "react";
+import { Markdown } from "./markdown";
+type Doc={slug:string;title:string}; type Session={authenticated:boolean;login?:string;csrf?:string};
+export function AdminEditor({documents}:{documents:Doc[]}){
+ const [session,setSession]=useState<Session|null>(null),[slug,setSlug]=useState(documents[0].slug),[md,setMd]=useState(""),[published,setPublished]=useState(""),[note,setNote]=useState(""),[tab,setTab]=useState<"edit"|"preview">("edit"),[dirty,setDirty]=useState(false),[message,setMessage]=useState("");
+ useEffect(()=>{fetch("/api/auth/session").then(r=>r.json() as Promise<Session>).then(setSession).catch(()=>setSession({authenticated:false}))},[]);
+ useEffect(()=>{if(!session?.authenticated)return;fetch(`/api/admin/documents/${slug}`).then(r=>r.json() as Promise<{draft_markdown?:string;published_markdown?:string;draft_note?:string}>).then(d=>{setMd(d.draft_markdown||d.published_markdown||"");setPublished(d.published_markdown||"");setNote(d.draft_note||"");setDirty(false)})},[slug,session]);
+ useEffect(()=>{const f=(e:BeforeUnloadEvent)=>{if(dirty)e.preventDefault()};addEventListener("beforeunload",f);return()=>removeEventListener("beforeunload",f)},[dirty]);
+ if(!session)return <main className="editor-page"><p>Memeriksa sesi…</p></main>;
+ if(!session.authenticated||!session.csrf)return <main className="editor-page"><h1>Editor Markdown</h1><p>Login GitHub diperlukan. Hanya username dalam allowlist yang dapat mengedit.</p><a className="primary-action" href="/api/auth/github">Login dengan GitHub</a></main>;
+ const csrf=session.csrf;
+ async function save(){const r=await fetch(`/api/admin/documents/${slug}/draft`,{method:"PUT",headers:{"content-type":"application/json","x-csrf-token":csrf},body:JSON.stringify({markdown:md,note})});setMessage(r.ok?"Draft tersimpan":"Gagal menyimpan");if(r.ok)setDirty(false);return r.ok}
+ async function publish(){if(!confirm("Publikasikan draft ini?"))return;if(!await save())return;const r=await fetch(`/api/admin/documents/${slug}/publish`,{method:"POST",headers:{"x-csrf-token":csrf}});setMessage(r.ok?"Versi publik diperbarui":"Gagal publish");if(r.ok)setPublished(md)}
+ return <div className="editor-page"><header className="editor-toolbar"><select value={slug} onChange={e=>setSlug(e.target.value)}>{documents.map(d=><option key={d.slug} value={d.slug}>{d.title}</option>)}</select><div className="editor-tabs"><button className={tab==="edit"?"active":""} onClick={()=>setTab("edit")}>Edit</button><button className={tab==="preview"?"active":""} onClick={()=>setTab("preview")}>Preview</button></div><input value={note} onChange={e=>{setNote(e.target.value);setDirty(true)}} placeholder="Catatan perubahan"/><button onClick={save}>Save Draft</button><button className="primary-action" onClick={publish}>Publish</button></header>{message&&<p className="editor-message">{message}</p>}<div className={`editor-grid tab-${tab}`}><textarea aria-label="Markdown editor" value={md} onChange={e=>{setMd(e.target.value);setDirty(e.target.value!==published)}}/><section className="editor-preview"><Markdown content={md}/></section></div></div>
+}
