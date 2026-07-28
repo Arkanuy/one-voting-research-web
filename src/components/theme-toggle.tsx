@@ -1,3 +1,3 @@
 "use client";
-import { Moon, Sun } from "lucide-react"; import { useTheme } from "next-themes";
-export function ThemeToggle(){const {resolvedTheme,setTheme}=useTheme();return <button className="icon-button" aria-label="Ganti tema" onClick={()=>setTheme(resolvedTheme==="dark"?"light":"dark")} suppressHydrationWarning>{resolvedTheme==="dark"?<Sun/>:<Moon/>}</button>}
+import { Contrast } from "lucide-react";import {useEffect} from "react";
+export function ThemeToggle(){useEffect(()=>{const stored=localStorage.getItem("one-voting-theme");const dark=stored?stored==="dark":matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",dark)},[]);function toggle(){const root=document.documentElement;const dark=!root.classList.contains("dark");root.classList.toggle("dark",dark);localStorage.setItem("one-voting-theme",dark?"dark":"light")}return <button className="icon-button" aria-label="Ganti tema" onClick={toggle}><Contrast/></button>}
