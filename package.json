@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "validate:pdd": "python scripts/validate-pdd-v2.py content/product-discovery.md && python scripts/validate-pdd-v2.test.py"
   },
   "dependencies": {
     "lucide-react": "^1.27.0",

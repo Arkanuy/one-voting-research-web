@@ -2,10 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 
 export const documents = [
-  { slug: "product-discovery", title: "Product Discovery", description: "Dokumen utama: masalah, pengguna, strategi, MVP, keamanan, dan validasi." },
-  { slug: "research-plan", title: "Research Plan", description: "Rencana, scope, metode, standar bukti, dan kriteria keputusan." },
-  { slug: "competitor-research", title: "Competitor Research", description: "Perbandingan platform voting dan ledger sumber resmi." },
-  { slug: "security-privacy-research", title: "Security & Privacy", description: "Keamanan, privasi, auditability, dan accessibility." },
+  { slug: "product-discovery", title: "Product Discovery", description: "Dokumen utama siap saji untuk stakeholder dan tim pengembangan.", group: "Dokumen Utama" },
+  { slug: "research-plan", title: "Research Plan", description: "Rencana, scope, metode, standar bukti, dan kriteria keputusan.", group: "Riset Pendukung" },
+  { slug: "competitor-research", title: "Competitor Research", description: "Perbandingan platform voting dan ledger sumber resmi.", group: "Riset Pendukung" },
+  { slug: "security-privacy-research", title: "Security & Privacy", description: "Keamanan, privasi, auditability, dan accessibility.", group: "Riset Pendukung" },
+  { slug: "product-discovery-v1-archive", title: "Product Discovery v1", description: "Versi lengkap pertama sebelum perombakan struktur dan bahasa.", group: "Arsip" },
 ] as const;
 export type DocumentSlug = (typeof documents)[number]["slug"];
 export type Heading = { id: string; text: string; level: number };
